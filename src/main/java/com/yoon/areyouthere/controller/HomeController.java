@@ -1,39 +1,39 @@
 package com.yoon.areyouthere.controller;
 
-import java.text.DateFormat;
-import java.util.Date;
-import java.util.Locale;
+import java.util.ArrayList;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.yoon.areyouthere.dto.Chat;
+import com.yoon.areyouthere.service.ChatServiceImpl;
 
 /**
  * Handles requests for the application home page.
  */
 @Controller
 public class HomeController {
+	@Autowired
+	private ChatServiceImpl chatService;
 	
-	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
-	/**
-	 * Simply selects the home view to render by returning its name.
-	 */
-	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String home(Locale locale, Model model) {
-		logger.info("Welcome home! The client locale is {}.", locale);
+ 
+	@RequestMapping(value = "/", method = RequestMethod.POST)
+	public ModelAndView select(HttpServletRequest req) { //HttpServletRequest ->커맨드 객체?
+		ModelAndView mav = new ModelAndView();
 		
-		Date date = new Date();
-		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
 		
-		String formattedDate = dateFormat.format(date);
+		ArrayList<Chat> chatList = chatService.chatSelect(Integer.parseInt(req.getParameter("listType"))); // 뷰와 컨트롤러 데이터 주고받기?
+		mav.addObject("chatList", chatList);
+		mav.setViewName("index");
 		
-		model.addAttribute("serverTime", formattedDate );
 		
-		return "home";
+		return mav;
 	}
 	
 }

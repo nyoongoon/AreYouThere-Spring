@@ -1,17 +1,17 @@
 package com.yoon.areyouthere.dao;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.springframework.jdbc.core.RowMapper;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementSetter;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.mchange.v2.c3p0.DriverManagerDataSource;
-import com.mysql.fabric.xmlrpc.base.Member;
-import com.mysql.jdbc.PreparedStatement;
 import com.yoon.areyouthere.dto.Chat;
 
 @Repository
@@ -23,6 +23,7 @@ public class ChatDAOImpl implements ChatDAO{
 	private String password = "tjrqls29";
 
 	private DriverManagerDataSource dataSource; //DataSource 객체 선언
+	private JdbcTemplate template;
 	
 	public ChatDAOImpl(){
 		// 생성자에서 DataSource 생성 및 설정.
@@ -36,20 +37,14 @@ public class ChatDAOImpl implements ChatDAO{
 		template.setDataSource(dataSource);
 	}
 	
-	private JdbcTemplate template; //JDBC Template 객체 선언
+	 //JDBC Template 객체 선언
 
 	@Override
 	public ArrayList<Chat> getChatListByRecent(final int number) { // final설정
 		ArrayList<Chat> chatList = null;
-		String sql = "SELECT * FROM chat WHERE chatID >(SELECT MAX(chatID) - ? FROM chat) ORDER BY chatTime DESC";
-		
-		chatList = (ArrayList<Chat>) template.query(sql, new PreparedStatementSetter(){
-
-			@Override
-			public void setValues(java.sql.PreparedStatement pstmt) throws SQLException {
-				pstmt.setInt(1, number);
-			}
-			}, new RowMapper<Chat>(){
+		//String sql = "SELECT * FROM chat WHERE chatID >(SELECT MAX(chatID) - ? FROM chat) ORDER BY chatTime DESC";
+		String sqlex = "SELECT * FROM chat";
+		chatList = (ArrayList<Chat>) template.query(sqlex, new RowMapper<Chat>(){
 				@Override
 				public Chat mapRow(ResultSet rs, int rowNum) throws SQLException{
 					Chat chat = new Chat();//생성 후 입력, 저장
@@ -61,7 +56,11 @@ public class ChatDAOImpl implements ChatDAO{
 					return chat;
 				}
 			});
-		
+		System.out.println("daoTest");
+		for(Chat chat : chatList) {
+			System.out.print(chat.getChatID());
+		}
+		System.out.println();
 		
 		return chatList;
 	}

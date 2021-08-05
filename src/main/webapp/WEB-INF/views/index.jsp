@@ -3,6 +3,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="resources/css/bootstrap.css">
@@ -30,12 +33,12 @@
 		chatContent = checkfunction(chatContent);
 		$.ajax({
 			type : "POST",
-			url : "./chatSubmitServlet",
+			url : "/",
 			data : {
 				chatName : chatName,
 				chatContent : chatContent
 			},
-			success : function(result) {
+			success : function(result) { //콜백함수. 
 				if (result == 1) {
 					autoClosingAlert('#successMessage', 2000);
 				} else if (result == 0) {
@@ -55,7 +58,28 @@
 		}, delay);
 	
 	}
+	function chatListHome(){
+		console.log('homeFunc');
+		$.ajax({
+			type : "GET",
+			url : "/",	
+			
+		})
+		.done(function(data) {	//함수가 실행 안됨
+			console.log('ajax success'); 
+			
+			var parsed = JSON.parse(data);
+			var result = parsed.result;
+			for(var i = 0; i < result.length; i++){
+				addChat(result[i][0].value, result[i][1].value, result[i][2].value);
+				
+			}
+			lastID = Number(parsed.last);
+			 
+		});
+	}
 	function chatListFunction(type){
+		console.log('chatListFunction'); 
 		$.ajax({
 			type : "POST",
 			url : "/",
@@ -110,7 +134,8 @@
 	});
 	//페이지 시작
 	$(document).ready(function(){
-		chatListFunction('ten');
+		console.log(1); //여기까지 들어옴
+		chatListHome();
 		
 	});	
 	

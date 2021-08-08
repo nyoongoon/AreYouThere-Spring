@@ -40,10 +40,10 @@ public class ChatDAOImpl implements ChatDAO{
 	 //JDBC Template 객체 선언
 
 	@Override
-	public ArrayList<Chat> getChatListByRecent(final int number) { // final설정
+	public ArrayList<Chat> getChatListByRecent() { // final설정
 		ArrayList<Chat> chatList = null;
 		//String sql = "SELECT * FROM chat WHERE chatID >(SELECT MAX(chatID) - ? FROM chat) ORDER BY chatTime DESC";
-		String sqlex = "SELECT * FROM chat";
+		String sqlex = "SELECT * FROM chat WHERE chatID >(SELECT MAX(chatID) - 5 FROM chat) ORDER BY chatTime DESC";
 		chatList = (ArrayList<Chat>) template.query(sqlex, new RowMapper<Chat>(){
 				@Override
 				public Chat mapRow(ResultSet rs, int rowNum) throws SQLException{
@@ -66,9 +66,30 @@ public class ChatDAOImpl implements ChatDAO{
 	}
 
 	@Override
-	public ArrayList<Chat> getUpdateChatList(String last) {
-		// TODO Auto-generated method stub
-		return null;
+	public ArrayList<Chat> getUpdateChatList(final String last) {
+		ArrayList<Chat> chatList = null;
+		String sqlex = "SELECT * FROM chat WHERE chatID <= ? AND chatId >= ? ORDER BY chatTime DESC";
+		chatList = (ArrayList<Chat>) template.query(sqlex, new PreparedStatementSetter(){
+			@Override
+			public void setValues(PreparedStatement pstmt) throws SQLException{
+				pstmt.setInt(1,Integer.parseInt(last)-1);
+				pstmt.setInt(2,Integer.parseInt(last)-5);
+			}
+		}, new RowMapper<Chat>(){
+				@Override
+				public Chat mapRow(ResultSet rs, int rowNum) throws SQLException{
+					Chat chat = new Chat();//생성 후 입력, 저장
+					chat.setChatID(rs.getInt("chatID"));
+					chat.setChatName(rs.getString("chatName")); 
+					//데이터 받기만 하고 가공은 서비스단에서 하기.
+					chat.setChatContent(rs.getString("chatContent"));
+					chat.setChatTime(rs.getString("chatTime"));
+					return chat;
+				}
+			});
+		
+		
+		return chatList;
 	}
 
 	@Override

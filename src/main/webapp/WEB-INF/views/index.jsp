@@ -59,6 +59,9 @@
 	
 	}
 	function chatListHome(){
+		
+		
+		console.log('chatListHome'); 
 		var data = <%= request.getAttribute("result") %>
 			
 		
@@ -67,36 +70,47 @@
 			addChat(result[i][0].value, result[i][1].value, result[i][2].value);
 			
 		}
-		lastID = Number(parsed.last);
+		lastID = data.last;
 			 
 	}
 	
-	function chatListFunction(type){
-		console.log('chatListFunction'); 
+	function chatListFunction(lastID){
 		$.ajax({
-			type : "POST",
-			url : "/",
-			data : {
-				listType: type,
-			},
-			success: function(data) {
-				var parsed = JSON.parse(data);
-				var result = parsed.result;
-				for(var i = 0; i < result.length; i++){
-					addChat(result[i][0].value, result[i][1].value, result[i][2].value);
+			  type: "GET",
+			  url: '/areyouthere/update',
+			  data: {lastId : lastID},
+			  contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+			  success: function(data) {
+				  console.log('updateSuccess'); 
+					var result = data.result;
 					
+					for(var i = 0; i < result.length; i++){
+						addChat(result[i][0].value, result[i][1].value, result[i][2].value);
+						
+					}
+					lastID = Number(parsed.last);
+					 
 				}
-				lastID = Number(parsed.last);
-				 
-			}
-		});
+			});
+
+		
+		
 	}
+
+		
+		
+		
+		
+
+
+	
+
 	function addChat(chatName, chatContent, chatTime){
 		$('#chatList').prepend('<div class="row"' +
 		 					'<div class="col-lg-12">' +
 		 					'<div class="media">' + 
 		 					'<a class="pull-left" href="#">' +
-		 					'<img class="media-object" src="images/w.png" alt="">'+
+		 					//'<img class="media-object" src="images/w.png" alt="">'+
 		 					'</a>' + 
 		 					'<div class="media-body">'+
 		 					'<h4 class="media-heading">'+
@@ -116,6 +130,7 @@
 					$('#chatList').scrollTop($('#chatList')[0].clientHeight+7);
 	}
 	//페이지가 로딩이 완료됐을 경우 실행하라고 알려줌
+	
 	$(document).ready(function(){
         $('#chatList').scroll(function(){
 	        var scrollT = $(this).scrollTop(); //스크롤바의 상단위치
@@ -125,11 +140,14 @@
 	        }
 	    });
 	});
+	
 	//페이지 시작
 	$(document).ready(function(){
-		console.log(1); //여기까지 들어옴
+		console.log('start'); //여기까지 들어옴
 		chatListHome();
 		
+		$('#chatList').scrollTop($('#chatList')[0].scrollHeight);
+		console.log('scroll');
 	});	
 	
 </script>

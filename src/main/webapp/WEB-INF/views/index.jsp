@@ -59,25 +59,18 @@
 	
 	}
 	function chatListHome(){
-		console.log('homeFunc');
-		$.ajax({
-			type : "GET",
-			url : "/",	
+		var data = <%= request.getAttribute("result") %>
 			
-		})
-		.done(function(data) {	//함수가 실행 안됨
-			console.log('ajax success'); 
+		
+		var result = data.result;
+		for(var i = 0; i < result.length; i++){
+			addChat(result[i][0].value, result[i][1].value, result[i][2].value);
 			
-			var parsed = JSON.parse(data);
-			var result = parsed.result;
-			for(var i = 0; i < result.length; i++){
-				addChat(result[i][0].value, result[i][1].value, result[i][2].value);
-				
-			}
-			lastID = Number(parsed.last);
+		}
+		lastID = Number(parsed.last);
 			 
-		});
 	}
+	
 	function chatListFunction(type){
 		console.log('chatListFunction'); 
 		$.ajax({

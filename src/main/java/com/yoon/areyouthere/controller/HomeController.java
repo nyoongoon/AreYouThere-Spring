@@ -1,13 +1,10 @@
 package com.yoon.areyouthere.controller;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -24,24 +21,15 @@ public class HomeController {
 	private ChatServiceImpl chatService;
 	
 	@RequestMapping(value = "/",  method = RequestMethod.GET)
-	public String home(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
-		request.setCharacterEncoding("UTF-8");
-		response.setContentType("text/html; charset=UTF-8");
+	public String home(Model model){
 		
-		ModelAndView mav = new ModelAndView();
 		String result = chatService.chatSelect(0); 
 		System.out.println("controllerTest");
 		System.out.println(result);
-		mav.addObject(result);
-		mav.setViewName("index");
-		try {
-		response.getWriter().write(result);
-		}catch(Exception e) {
-			response.getWriter().write("");
-		}
+		model.addAttribute("result", result);
+		
+		
 		return "index";
-		
-		
 		
 	}
 	//@RequestMapping(value = "/", method = RequestMethod.GET

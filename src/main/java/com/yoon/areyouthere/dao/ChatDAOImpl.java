@@ -5,13 +5,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import org.springframework.jdbc.core.RowMapper;
-
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.PreparedStatementSetter;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.mchange.v2.c3p0.DriverManagerDataSource;
+import com.mysql.jdbc.Connection;
 import com.yoon.areyouthere.dto.Chat;
 
 @Repository
@@ -93,11 +94,38 @@ public class ChatDAOImpl implements ChatDAO{
 	}
 
 	@Override
-	public int submit(String chatName, String chatContent) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int submit(final String chatName, final String chatContent) {
+		final String sqlex = "INSERT INTO chat(chatName, chatContent, chatTime) VALUES(?, ?, now())";
+		
+		int result = template.update(new PreparedStatementCreator(){
+
+			@Override
+			public PreparedStatement createPreparedStatement(java.sql.Connection con) throws SQLException {
+				PreparedStatement pstmt = con.prepareStatement(sqlex);
+				pstmt.setString(1, chatName);
+				pstmt.setString(2, chatContent);
+				return pstmt;
+			}
+		});
+		return result;
 	}
 	
-	
+	public ArrayList<Chat> refresh() {
+		ArrayList<Chat> chatList = null;
+		String sqlex = "SELECT * FROM chat WHERE chatID  = (SELECT MAX(chatID) FROM chat)";
+		chatList = (ArrayList<Chat>) template.query(sqlex, new RowMapper<Chat>(){ //에러 발생			
+				@Override
+				public Chat mapRow(ResultSet rs, int rowNum) throws SQLException{
+					Chat chat = new Chat();//생성 후 입력, 저장
+					chat.setChatID(rs.getInt("chatID"));
+					chat.setChatName(rs.getString("chatName")); 
+					//데이터 받기만 하고 가공은 서비스단에서 하기.
+					chat.setChatContent(rs.getString("chatContent"));
+					chat.setChatTime(rs.getString("chatTime"));
+					return chat;
+				}
+			});
+		return chatList;
+	}
 
 }

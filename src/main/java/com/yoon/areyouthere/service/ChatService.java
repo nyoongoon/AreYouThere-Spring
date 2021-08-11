@@ -7,5 +7,5 @@ import com.yoon.areyouthere.dto.Chat;
 public interface ChatService {
 	public String chatSelect();
 	public String chatUpdate(String last);
-	public int chatSubmit();
+	public int chatSubmit(String chatName, String chatContent);
 }

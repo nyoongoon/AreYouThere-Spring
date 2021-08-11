@@ -8,5 +8,6 @@ public interface ChatDAO {
 	public ArrayList<Chat> getChatListByRecent();
 	public ArrayList<Chat> getUpdateChatList(String last);
 	public int submit(String chatName, String chatContent);
-
+	public ArrayList<Chat> refresh();
+	
 }

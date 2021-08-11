@@ -33,15 +33,36 @@
 		chatContent = checkfunction(chatContent);
 		$.ajax({
 			type : "POST",
-			url : "/",
+			url : "/areyouthere/submit",
 			data : {
 				chatName : chatName,
 				chatContent : chatContent
 			},
-			success : function(result) { //콜백함수. 
-				if (result == 1) {
+			success : function(data) { //콜백함수. // 결과를 json으로 받아서새로 붙이기
+				console.log('submit결과');
+				console.log(data);
+				if (data == 1) {
 					autoClosingAlert('#successMessage', 2000);
-				} else if (result == 0) {
+					
+						// submit 결과 비동기로 보여주기
+						console.log("refresh 들어옴");
+						$.ajax({
+							type : "POST",
+							url : "/areyouthere/refresh",
+							success : function(data) {
+								console.log('refresh ajax 들어옴');
+								console.log(data);
+								 var parsed = JSON.parse(data);
+								 var result = parsed.result;
+									//맨 아래에 하나의 list만 붙이면 됨
+									//하나만 붙이기						
+								 console.log(result[0][0].value, result[0][1].value, result[0][2].value);
+	  							 refreshChat(result[0][0].value, result[0][1].value, result[0][2].value); 
+	  							$('#chatList').scrollTop($('#chatList')[0].scrollHeight);				
+							}
+						});
+					
+				} else if (data == 0) {
 					autoClosingAlert('#dangerMessage', 2000);
 				} else {
 					autoClosingAlert('#warningMessage', 2000);
@@ -62,34 +83,40 @@
 		
 		
 		console.log('chatListHome'); 
-		var data = <%= request.getAttribute("result") %>
+		var data = <%= request.getAttribute("result") %> //JSP 스크립트 태그
 			
 		
 		var result = data.result;
 		for(var i = 0; i < result.length; i++){
+			console.log(result[i][0].value, result[i][1].value, result[i][2].value);
 			addChat(result[i][0].value, result[i][1].value, result[i][2].value);
 			
 		}
-		lastID = data.last;
+		lastID = Number(data.last);
 			 
 	}
 	
-	function chatListFunction(lastID){
+	function chatListFunction(){
 		$.ajax({
-			  type: "GET",
+			  type: "POST",
 			  url: '/areyouthere/update',
 			  data: {lastId : lastID},
 			  contentType: 'application/x-www-form-urlencoded; charset=utf-8',
 			  success: function(data) {
-				  console.log('updateSuccess'); 
-					var result = data.result;
-					
-					for(var i = 0; i < result.length; i++){
+				  console.log('success ajax'); 	
+				  console.log(result);
+				  
+				  var parsed = JSON.parse(data);
+				  var result = parsed.result;
+				  for(var i = 0; i < result.length; i++){
+					  console.log(result[i][0].value, result[i][1].value, result[i][2].value);
 						addChat(result[i][0].value, result[i][1].value, result[i][2].value);
-						
 					}
-					lastID = Number(parsed.last);
-					 
+				  console.log('현재 last의 값');
+				  console.log(lastID);
+				  lastID =  Number(parsed.last); //변수를 못 담는건가?
+				  console.log('새롭게 담은 last의 값');
+				  console.log(lastID);	 
 				}
 			});
 
@@ -106,6 +133,7 @@
 	
 
 	function addChat(chatName, chatContent, chatTime){
+		console.log('addChat');
 		$('#chatList').prepend('<div class="row"' +
 		 					'<div class="col-lg-12">' +
 		 					'<div class="media">' + 
@@ -129,6 +157,32 @@
 		 					'<hr>');
 					$('#chatList').scrollTop($('#chatList')[0].clientHeight+7);
 	}
+	// CompletedSubmit
+	function refreshChat(chatName, chatContent, chatTime){
+		console.log('freshChat');
+		$('#chatList').append('<div class="row"' +
+		 					'<div class="col-lg-12">' +
+		 					'<div class="media">' + 
+		 					'<a class="pull-left" href="#">' +
+		 					//'<img class="media-object" src="images/w.png" alt="">'+
+		 					'</a>' + 
+		 					'<div class="media-body">'+
+		 					'<h4 class="media-heading">'+
+		 					chatName +
+		 					'<span class="small pull-right">' +
+		 					chatTime + 
+		 					'</span>' +
+		 					'</h4>' +
+		 					'<p>' +
+		 					chatContent +
+		 					'</p>' +
+		 					'</div>' +
+		 					'</div>' +
+		 					'</div>' +
+		 					'</div>' +
+		 					'<hr>');
+					
+	}
 	//페이지가 로딩이 완료됐을 경우 실행하라고 알려줌
 	
 	$(document).ready(function(){
@@ -136,7 +190,10 @@
 	        var scrollT = $(this).scrollTop(); //스크롤바의 상단위치
 	      	
 	        if(scrollT < 2) { // 스크롤바가 아래 쪽에 위치할 때
-	        	chatListFunction(lastID);
+	        	console.log('스크롤lastID값');
+	        	console.log(lastID);
+	        	
+	        	chatListFunction();
 	        }
 	    });
 	});

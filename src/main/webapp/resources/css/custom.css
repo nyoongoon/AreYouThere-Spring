@@ -91,12 +91,13 @@ h1 {
 
 .portlet .portlet-body {
     padding: 15px;
-    background: #fff;
+    background: #FCFDFF;
+    color: #0B0B3B;
 }
 
 .portlet .portlet-footer {
     padding: 10px 15px;
-    background: #e0e7e8;
+    background: #FFEAE0;
 }
 
 .portlet .portlet-footer ul {
@@ -125,12 +126,12 @@ h1 {
 
 .portlet-blue,
 .portlet-blue>.portlet-heading {
-    border-color: #2980b9;
+    border-color: #A4C3FF;
 }
 
 .portlet-blue>.portlet-heading {
     color: #fff;
-    background-color: #2980b9;
+    background-color: #C1C5FF;
 }
 
 .portlet-red,

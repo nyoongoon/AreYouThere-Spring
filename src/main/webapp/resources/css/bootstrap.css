@@ -2554,7 +2554,7 @@ output {
   font-size: 14px;
   line-height: 1.42857143;
   color: #555;
-  background-color: #fff;
+  background-color: #FCFDFF;
   background-image: none;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -2630,6 +2630,7 @@ input[type="search"] {
 }
 .form-group {
   margin-bottom: 15px;
+  
 }
 .radio,
 .checkbox {
@@ -3286,8 +3287,8 @@ fieldset[disabled] .btn-info.focus {
 }
 .btn-warning {
   color: #fff;
-  background-color: #f0ad4e;
-  border-color: #eea236;
+  background-color: #FF9021;
+  border-color: #FFA921;
 }
 .btn-warning:focus,
 .btn-warning.focus {
@@ -3824,11 +3825,13 @@ tbody.collapse.in {
   padding-left: 0;
 }
 .input-group .form-control {
+  
   position: relative;
   z-index: 2;
   float: left;
   width: 100%;
   margin-bottom: 0;
+  
 }
 .input-group .form-control:focus {
   z-index: 3;

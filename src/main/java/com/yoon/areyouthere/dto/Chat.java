@@ -1,34 +1,34 @@
 package com.yoon.areyouthere.dto;
 
 public class Chat {
-	int chatID;
+	int id;
 	
-	String chatName;
-	String chatContent;
-	String chatTime;
+	String name;
+	String content;
+	String time;
 	
-	public int getChatID() {
-		return chatID;
+	public int getId() {
+		return id;
 	}
-	public void setChatID(int chatID) {
-		this.chatID = chatID;
+	public void setId(int id) {
+		this.id = id;
 	}
-	public String getChatName() {
-		return chatName;
+	public String getName() {
+		return name;
 	}
-	public void setChatName(String chatName) {
-		this.chatName = chatName;
+	public void setName(String name) {
+		this.name = name;
 	}
-	public String getChatContent() {
-		return chatContent;
+	public String getContent() {
+		return content;
 	}
-	public void setChatContent(String chatContent) {
-		this.chatContent = chatContent;
+	public void setContent(String content) {
+		this.content = content;
 	}
-	public String getChatTime() {
-		return chatTime;
+	public String getTime() {
+		return time;
 	}
-	public void setChatTime(String chatTime) {
-		this.chatTime = chatTime;
+	public void setTime(String time) {
+		this.time = time;
 	}
 } 

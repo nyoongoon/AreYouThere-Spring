@@ -41,7 +41,7 @@ public class ChatDAOImpl implements ChatDAO{
 	 //JDBC Template 객체 선언
 
 	@Override
-	public ArrayList<Chat> getChatListByRecent() { // final설정
+	public ArrayList<Chat> getByRecent() { // final설정
 		ArrayList<Chat> chatList = null;
 		//String sql = "SELECT * FROM chat WHERE chatID >(SELECT MAX(chatID) - ? FROM chat) ORDER BY chatTime DESC";
 		String sqlex = "SELECT * FROM chat WHERE chatID >(SELECT MAX(chatID) - 5 FROM chat) ORDER BY chatTime DESC";
@@ -49,17 +49,17 @@ public class ChatDAOImpl implements ChatDAO{
 				@Override
 				public Chat mapRow(ResultSet rs, int rowNum) throws SQLException{
 					Chat chat = new Chat();//생성 후 입력, 저장
-					chat.setChatID(rs.getInt("chatID"));
-					chat.setChatName(rs.getString("chatName")); 
+					chat.setId(rs.getInt("chatID"));
+					chat.setName(rs.getString("chatName")); 
 					//데이터 받기만 하고 가공은 서비스단에서 하기.
-					chat.setChatContent(rs.getString("chatContent"));
-					chat.setChatTime(rs.getString("chatTime"));
+					chat.setContent(rs.getString("chatContent"));
+					chat.setTime(rs.getString("chatTime"));
 					return chat;
 				}
 			});
 		System.out.println("daoTest");
 		for(Chat chat : chatList) {
-			System.out.print(chat.getChatID());
+			System.out.print(chat.getId());
 		}
 		System.out.println();
 		
@@ -80,11 +80,11 @@ public class ChatDAOImpl implements ChatDAO{
 				@Override
 				public Chat mapRow(ResultSet rs, int rowNum) throws SQLException{
 					Chat chat = new Chat();//생성 후 입력, 저장
-					chat.setChatID(rs.getInt("chatID"));
-					chat.setChatName(rs.getString("chatName")); 
+					chat.setId(rs.getInt("chatID"));
+					chat.setName(rs.getString("chatName")); 
 					//데이터 받기만 하고 가공은 서비스단에서 하기.
-					chat.setChatContent(rs.getString("chatContent"));
-					chat.setChatTime(rs.getString("chatTime"));
+					chat.setContent(rs.getString("chatContent"));
+					chat.setTime(rs.getString("chatTime"));
 					return chat;
 				}
 			});
@@ -117,11 +117,11 @@ public class ChatDAOImpl implements ChatDAO{
 				@Override
 				public Chat mapRow(ResultSet rs, int rowNum) throws SQLException{
 					Chat chat = new Chat();//생성 후 입력, 저장
-					chat.setChatID(rs.getInt("chatID"));
-					chat.setChatName(rs.getString("chatName")); 
+					chat.setId(rs.getInt("chatID"));
+					chat.setName(rs.getString("chatName")); 
 					//데이터 받기만 하고 가공은 서비스단에서 하기.
-					chat.setChatContent(rs.getString("chatContent"));
-					chat.setChatTime(rs.getString("chatTime"));
+					chat.setContent(rs.getString("chatContent"));
+					chat.setTime(rs.getString("chatTime"));
 					return chat;
 				}
 			});
